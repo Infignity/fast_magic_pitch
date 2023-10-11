@@ -12,3 +12,4 @@ class Company(Base):
     company_data = Column(String)
     pricing = Column(String)
     solutions = Column(String)
+    ai_report = Column(String)

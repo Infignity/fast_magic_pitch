@@ -4,43 +4,49 @@
 
 <body>
     <section class="vh-100" style="background-color: #eee;">
-        <div class="container py-5 h-100">
+        <div class="container py-2 h-100">
             <div class="row d-flex justify-content-center align-items-center h-100">
                 <div class="col col-lg-9 col-xl-7">
                     <div class="card rounded-3">
                         <div class="card-body p-4">
 
                             <h4 class="text-center my-3 pb-3">Strategic Campaign</h4>
-                            <form class="form" action="/add" method="post">
+                            <form class="form" action="/ai_query" method="post">
 
                                 <div class="form-outline mt-2 p-2">
-                                    <label>Homepage Data:</label>
-                                    <textarea rows="5" type="text" id="title" name="company_data" class="form-control"
-                                        placeholder="Enter company description"></textarea>
+                                    <label>Template:</label>
+                                    <textarea rows="5" type="text" id="title" name="templates" class="form-control"
+                                        placeholder="Enter your prompt"></textarea>
                                 </div>
 
                                 <div class="form-outline mt-2 p-2">
-                                    <label>Products/Services Data:</label>
-                                    <textarea rows="5" type="text" id="title" name="service_product" class="form-control"
-                                        placeholder="Enter company Product and Services"></textarea>
-                                </div>
-
-                                <div class="form-outline mt-2 p-2">
-                                    <label>Pricing:</label>
-                                    <textarea rows="5" type="text" id="title" name="Pricing" class="form-control"
-                                        placeholder="Enter company pricing policy"></textarea>
-                                </div>
-
-                                <div class="form-outline mt-2 p-2">
-                                    <label>Solutions:</label>
-                                    <textarea rows="5" type="text" id="title" name="solutions" class="form-control"
-                                        placeholder="Enter company identified solutions"></textarea>
+                                    <label>Variable:</label>
+                                    <textarea rows="5" type="text" id="title" name="variables" class="form-control"
+                                        placeholder="Enter company variables"></textarea>
                                 </div>
 
                                 <div class="mt-5 p-2">
                                     <button type="submit" class="btn btn-success"> process</button>
                                 </div>
                             </form>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row d-flex justify-content-center align-items-center h-100">
+                <div class="col col-lg-9 col-xl-7">
+                    <div class="card rounded-3">
+                        <div class="card-body p-4">
+
+                            
+                            {% if data %}
+                                <h4 class="text-center my-3 pb-3">Strategic Reponse</h4>
+                                <p>{{ data }}</p>
+                            {% else %}
+                                <p>No feed back available</p>
+                            {% endif %}
 
                         </div>
                     </div>
