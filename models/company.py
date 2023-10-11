@@ -8,8 +8,4 @@ class Company(Base):
     __tablename__ = "company"
 
     id = Column(Integer, primary_key=True, index=True)
-    service_product = Column(String)
-    company_data = Column(String)
-    pricing = Column(String)
-    solutions = Column(String)
-    ai_report = Column(String)
+    prompt = Column(String)

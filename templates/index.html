@@ -6,23 +6,20 @@
     <section class="vh-100" style="background-color: #eee;">
         <div class="container py-2 h-100">
             <div class="row d-flex justify-content-center align-items-center h-100">
-                <div class="col col-lg-9 col-xl-7">
+                <div class="col col-lg-7 col-xl-7">
                     <div class="card rounded-3">
                         <div class="card-body p-4">
 
                             <h4 class="text-center my-3 pb-3">Strategic Campaign</h4>
-                            <form class="form" action="/ai_query" method="post">
+                            <form class="form" method="post" id="myForm">
 
                                 <div class="form-outline mt-2 p-2">
                                     <label>Template:</label>
-                                    <textarea rows="5" type="text" id="title" name="templates" class="form-control"
+                                    <textarea rows="5" type="text" id="extractor" name="prompt" class="form-control"
                                         placeholder="Enter your prompt"></textarea>
                                 </div>
+                                <div class="row d-flex justify-content-center align-items-center" id="dynamicInputs">
 
-                                <div class="form-outline mt-2 p-2">
-                                    <label>Variable:</label>
-                                    <textarea rows="5" type="text" id="title" name="variables" class="form-control"
-                                        placeholder="Enter company variables"></textarea>
                                 </div>
 
                                 <div class="mt-5 p-2">
@@ -33,27 +30,212 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="col col-lg-5 col-xl-5">
+
+                    {% if data %}
+                    <div class="card rounded-3">
+                        <div class="card-body p-4">
+                            <h4 class="text-center my-3 pb-3">Strategic Reponse</h4>
+                            <ul>
+                                {% for item in data %}
+                                <li>{{ item.prompt }}</li>
+                                {% endfor %}
+                            </ul>
+                            {% else %}
+                            <p>No feed back available</p>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                </div>
+
+
             </div>
 
             <div class="row d-flex justify-content-center align-items-center h-100">
                 <div class="col col-lg-9 col-xl-7">
                     <div class="card rounded-3">
-                        <div class="card-body p-4">
-
-                            
-                            {% if data %}
-                                <h4 class="text-center my-3 pb-3">Strategic Reponse</h4>
-                                <p>{{ data }}</p>
-                            {% else %}
-                                <p>No feed back available</p>
-                            {% endif %}
+                        <div class="card-body p-4" id="inputed">
 
                         </div>
                     </div>
                 </div>
             </div>
+
+            <div class="card card-bordered">
+                <div class="card-body">
+                    <!--begin::Input group-->
+                    <div class="input-group">
+                        <!--begin::Input-->
+                        <input id="kt_clipboard_1" type="text" class="form-control" placeholder="name@example.com"
+                            value="name@example.com" />
+                        <!--end::Input-->
+
+                        <!--begin::Button-->
+                        <button class="btn btn-light-primary" data-clipboard-target="#kt_clipboard_1">
+                            Copy
+                        </button>
+                        <!--end::Button-->
+                    </div>
+                    <!--begin::Input group-->
+                </div>
+            </div>
+
+
+            <!-- <div class="row d-flex justify-content-center align-items-center h-100">
+                <div class="col col-lg-9 col-xl-7">
+                    <div class="card rounded-3">
+                        <div class="card-body p-4">
+
+
+                            {% if data %}
+                            <h4 class="text-center my-3 pb-3">Strategic Reponse</h4>
+                            <p>{{ data }}</p>
+                            {% else %}
+                            <p>No feed back available</p>
+                            {% endif %}
+
+                        </div>
+                    </div>
+                </div>
+            </div> -->
         </div>
     </section>
 </body>
+<script src="assets/plugins/global/plugins.bundle.js"></script>
+<script>
+
+    let typingTimer;
+    const doneTypingInterval = 1000;
+    const inputField = document.getElementById('extractor');
+    const output = document.getElementById('output');
+    // inputed
+    const inputed = document.getElementById('inputed');
+    const dynamicInputs = document.getElementById('dynamicInputs');
+    let extractedValues = null;
+
+    inputField.addEventListener('keyup', function () {
+        clearTimeout(typingTimer);
+        typingTimer = setTimeout(function () {
+            extractData();
+        }, doneTypingInterval);
+    });
+
+    function extractData() {
+        // Get the text from the input field
+        const text = inputField.value;
+        console.log(text)
+        const regex = /\$\{([^}]+)\}/g;
+        const extractedVal = [...text.matchAll(regex)];
+        extractedValues = extractedVal.map(match => match[1]);
+
+        dynamicInputs.innerHTML = '';
+
+        // Create input fields for each extracted value
+        dynamicInputs.innerHTML = ''; // Clear previous dynamic inputs
+
+        if (extractedValues) {
+            extractedValues.forEach((value, index) => {
+                const div = document.createElement('div');
+                div.className = 'form-outline mt-2 p-2';
+
+                const label = document.createElement('label');
+                label.textContent = `${value}:`;
+
+                const input = document.createElement('input');
+                input.type = 'text';
+                // input.value = value;
+                input.name = value;
+                input.className = 'form-control';
+                input.placeholder = `Enter ${value}`;
+
+                div.appendChild(label);
+                div.appendChild(input);
+                dynamicInputs.appendChild(div);
+            });
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', (event) => {
+        document.getElementById("myForm").addEventListener("submit", function (e) {
+            e.preventDefault();
+            const form = document.getElementById('myForm');
+
+            // Extract variable values from the form
+            const variableValues = {};
+            const elements = form.elements;
+            for (let i = 0; i < elements.length; i++) {
+                if (elements[i].type === 'text') {
+                    variableValues[elements[i].name] = elements[i].value;
+                }
+            }
+            // Text containing variables
+            // const text = 'My name is ${input_field_name} and I live in ${city}.';
+            const text = document.getElementById('extractor').value;
+            console.log(variableValues)
+
+            // Replace variables with values
+            const replacedText = text.replace(/\${([^}]+)}/g, (match, variableName) => {
+                return variableValues[variableName] || match;
+            });
+
+            // Output or use the replaced text as needed
+            console.log(replacedText);
+            inputed.textContent = replacedText
+
+            const formData = new FormData();
+            formData.append("prompt", replacedText);
+
+            fetch('/ai_query', {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ "prompt": replacedText })
+            })
+                .then(resp => resp.text())
+                .then(data => {
+                    // document.getElementById("response").innerHTML = data;
+                    console.log(data)
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+
+
+        });
+
+    });
+
+    const target = document.getElementById('kt_clipboard_1');
+    const button = target.nextElementSibling;
+
+    // Init clipboard -- for more info, please read the offical documentation: https://clipboardjs.com/
+    var clipboard = new ClipboardJS(button, {
+        target: target,
+        text: function () {
+            return target.value;
+        }
+    });
+
+    // Success action handler
+    clipboard.on('success', function (e) {
+        const currentLabel = button.innerHTML;
+
+        // Exit label update when already in progress
+        if (button.innerHTML === 'Copied!') {
+            return;
+        }
+
+        // Update button label
+        button.innerHTML = 'Copied!';
+
+        // Revert button label after 3 seconds
+        setTimeout(function () {
+            button.innerHTML = currentLabel;
+        }, 3000)
+    });
+</script>
 
 </html>
