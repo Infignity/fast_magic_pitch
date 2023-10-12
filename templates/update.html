@@ -4,19 +4,23 @@
 
 <body>
     <section class="vh-auto" style="background-color: #eee;">
-        <div class="container py-2 h-50">
+        <div class="container py-2 h-50 ">
             <div class="row d-flex h-100 justify-content-center align-items-center">
                 <div class="col col-lg-7 col-xl-7">
                     <div class="card rounded-3">
                         <div class="card-body p-4">
 
-                            <h4 class="text-center my-3 pb-3">Strategic Campaign</h4>
+                            <h4 class="text-center my-3 pb-3">Update Prompt</h4>
                             <form class="form" method="post" id="myForm">
 
                                 <div class="form-outline mt-2 p-2">
                                     <label>Template:</label>
-                                    <textarea rows="5" type="text" id="extractor" name="prompt" class="form-control"
-                                        placeholder="Enter your prompt"></textarea>
+                                    <textarea rows="5" type="text" id="extractor"  name="prompt" class="form-control"
+                                        placeholder="Enter your prompt">
+                                        {{data.prompt}}
+                                    </textarea>
+
+                                        
                                 </div>
                                 <div class="row d-flex justify-content-center align-items-center" id="dynamicInputs">
 
@@ -30,25 +34,6 @@
                         </div>
                     </div>
                 </div>
-
-                <!-- <div class="col col-lg-5 col-xl-5 ">
-
-                    {% if data %}
-                    <div class="card rounded-3">
-                        <div class="card-body p-4">
-                            <h4 class="text-center my-3 pb-3">Strategic Reponse</h4>
-                            <ul>
-                                {% for item in data %}
-                                <li>{{ item.prompt }}</li>
-                                {% endfor %}
-                            </ul>
-                            {% else %}
-                            <p>No feed back available</p>
-                            {% endif %}
-                        </div>
-                    </div>
-
-                </div> -->
 
             </div>
             
@@ -84,9 +69,9 @@
                 </div>
             </div> -->
         </div>
-        <div class="container py-2 h-50 ">
+        <div class="container py-2 h-50">
 
-            <div class="row d-flex justify-content-center align-items-center">
+            <div class="row d-flex justify-content-center align-items-center ">
                 <div class="col col-lg-7 col-xl-7 card card-bordered">
                     <div class="class-header">
                         <!--begin::Button-->
@@ -185,18 +170,22 @@
 
             const formData = new FormData();
             formData.append("prompt", replacedText);
+            const id = '{{data.id}}'
 
-            fetch('/ai_query', {
+            fetch(`/update/${id}`, {
                 method: 'POST',
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ "prompt": replacedText })
+                body: JSON.stringify({ "prompt": replacedText, id:id })
             })
                 .then(resp => resp.text())
                 .then(data => {
-                    // document.getElementById("response").innerHTML = data;
-                    location.reload(true)
+        
+                    if (data)
+                    {
+                        document.location.href="/";
+                    }
                 })
                 .catch(error => {
                     console.error(error);
