@@ -9,3 +9,4 @@ class Company(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     prompt = Column(String)
+    title = Column(String)

@@ -14,11 +14,18 @@
                             <form class="form" method="post" id="myForm">
 
                                 <div class="form-outline mt-2 p-2">
+                                    <label>Title:</label>
+                                    <input type="text" id="title" name="title" class="form-control"
+                                        value="{{data.title}}"
+                                        placeholder="Enter your prompt title">
+                                </div>
+
+                                <div class="form-outline mt-2 p-2">
                                     <label>Template:</label>
-                                    <textarea rows="5" type="text" id="extractor"  name="prompt" class="form-control"
-                                        placeholder="Enter your prompt">
-                                        {{data.prompt}}
-                                    </textarea>
+                                    <textarea rows="5" type="text" id="extractor"  name="prompt"  class="form-control"
+                                        style="text-align: left;"
+                                        placeholder="Enter your prompt"
+                                    >{{data.prompt}}</textarea>
 
                                         
                                 </div>
@@ -106,6 +113,10 @@
         }, doneTypingInterval);
     });
 
+    document.addEventListener('DOMContentLoaded', function() {
+        extractData()
+    });
+
     function extractData() {
         // Get the text from the input field
         const text = inputField.value;
@@ -168,8 +179,9 @@
             console.log(replacedText);
             inputed.textContent = replacedText
 
-            const formData = new FormData();
-            formData.append("prompt", replacedText);
+            // const formData = new FormData();
+            // formData.append("prompt", replacedText);
+            const title = form.elements["title"].value;
             const id = '{{data.id}}'
 
             fetch(`/update/${id}`, {
@@ -177,7 +189,7 @@
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ "prompt": replacedText, id:id })
+                body: JSON.stringify({ "prompt": text, id:id, title })
             })
                 .then(resp => resp.text())
                 .then(data => {

@@ -14,8 +14,14 @@
                             <form class="form" method="post" id="myForm">
 
                                 <div class="form-outline mt-2 p-2">
+                                    <label>Title:</label>
+                                    <input type="text" id="title" name="title" class="form-control"
+                                        placeholder="Enter your prompt title">
+                                </div>
+
+                                <div class="form-outline mt-2 p-2">
                                     <label>Template:</label>
-                                    <textarea rows="5" type="text" id="extractor" name="prompt" class="form-control"
+                                    <textarea rows="5" type="text" id="extractor" name="prompt" style="text-align: left;" class="form-control"
                                         placeholder="Enter your prompt"></textarea>
                                 </div>
                                 <div class="row d-flex justify-content-center align-items-center" id="dynamicInputs">
@@ -160,6 +166,7 @@
         document.getElementById("myForm").addEventListener("submit", function (e) {
             e.preventDefault();
             const form = document.getElementById('myForm');
+            
 
             // Extract variable values from the form
             const variableValues = {};
@@ -180,23 +187,24 @@
             });
 
             // Output or use the replaced text as needed
-            console.log(replacedText);
             inputed.textContent = replacedText
 
-            const formData = new FormData();
-            formData.append("prompt", replacedText);
+            // const formData = new FormData();
+            // formData.append("prompt", replacedText);
+            const title = form.elements["title"].value;
 
             fetch('/ai_query', {
                 method: 'POST',
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ "prompt": replacedText })
+                body: JSON.stringify({ "prompt": text, title })
             })
                 .then(resp => resp.text())
                 .then(data => {
-                    // document.getElementById("response").innerHTML = data;
-                    location.reload(true)
+                    // clear the input fields
+                    form.elements["title"].value = "";
+                    form.elements["prompt"].value = "";
                 })
                 .catch(error => {
                     console.error(error);

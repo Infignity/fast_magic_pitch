@@ -10,11 +10,11 @@ from models.company import Company
 from promptai.langopen import LangChainAI
 
 
-
-
 class TranslationRequest(BaseModel):
+    '''basemodel translator'''
     prompt: str
     id: Optional[int] = None
+    title: Optional[str] = None
 
 
 router = APIRouter()
@@ -33,6 +33,7 @@ def query_home(
         result_dict = {
             "id": item.id,
             "prompt": item.prompt,
+            "title": item.title,
         }
         result_list.append(result_dict)
     context = {"request": request, "data": result_list}
@@ -52,6 +53,7 @@ def query_ai_get(
         result_dict = {
             "id": item.id,
             "prompt": item.prompt,
+            "title": item.title,
         }
         result_list.append(result_dict)
     context = {"request": request, "data": result_list}
@@ -65,7 +67,8 @@ def query_ai_post(
     db: Session = Depends(connect_db),
 ):
     """query maker"""
-    new_company = Company(prompt=prompt.prompt)
+    new_company = Company(prompt=prompt.prompt, title=prompt.title)
+    print(prompt)
     db.add(new_company)
     db.commit()
     db.refresh(new_company)
@@ -94,7 +97,10 @@ def update_prompt(
 ):
     print(prompt)
     company = db.query(Company).filter(Company.id == prompt_id).first()
-    company.prompt = prompt.prompt
+    if prompt.prompt:
+        company.prompt = prompt.prompt
+    if prompt.title:
+        company.title = prompt.title
     db.commit()
 
     return {"status": "success"}
