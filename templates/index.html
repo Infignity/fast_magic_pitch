@@ -4,8 +4,8 @@
 
 <body>
     <section class="vh-100" style="background-color: #eee;">
-        <div class="container py-2 h-100">
-            <div class="row d-flex justify-content-center align-items-center h-100">
+        <div class="container py-2 h-50">
+            <div class="row d-flex h-100">
                 <div class="col col-lg-7 col-xl-7">
                     <div class="card rounded-3">
                         <div class="card-body p-4">
@@ -22,8 +22,8 @@
 
                                 </div>
 
-                                <div class="mt-5 p-2">
-                                    <button type="submit" class="btn btn-success"> process</button>
+                                <div class="mt-5 p-1">
+                                    <button type="submit" class="btn btn-outline-success"> Submit</button>
                                 </div>
                             </form>
 
@@ -31,7 +31,7 @@
                     </div>
                 </div>
 
-                <div class="col col-lg-5 col-xl-5">
+                <div class="col col-lg-5 col-xl-5 ">
 
                     {% if data %}
                     <div class="card rounded-3">
@@ -50,10 +50,23 @@
 
                 </div>
 
-
+            </div>
+            <div class="row d-flex ">
+                <div class="col col-lg-7 col-xl-7 card card-bordered">
+                    <div class="class-header">
+                        <!--begin::Button-->
+                        <button class="btn btn-success my-2" onclick="copyToClipboard()">
+                            Copy
+                        </button>
+                        <!--end::Button-->
+                    </div>
+                    <div class="card-body" id="inputed">
+    
+                    </div>
+                </div>
             </div>
 
-            <div class="row d-flex justify-content-center align-items-center h-100">
+            <!-- <div class="row d-flex justify-content-center align-items-center h-100">
                 <div class="col col-lg-9 col-xl-7">
                     <div class="card rounded-3">
                         <div class="card-body p-4" id="inputed">
@@ -61,26 +74,9 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
 
-            <div class="card card-bordered">
-                <div class="card-body">
-                    <!--begin::Input group-->
-                    <div class="input-group">
-                        <!--begin::Input-->
-                        <input id="kt_clipboard_1" type="text" class="form-control" placeholder="name@example.com"
-                            value="name@example.com" />
-                        <!--end::Input-->
-
-                        <!--begin::Button-->
-                        <button class="btn btn-light-primary" data-clipboard-target="#kt_clipboard_1">
-                            Copy
-                        </button>
-                        <!--end::Button-->
-                    </div>
-                    <!--begin::Input group-->
-                </div>
-            </div>
+           
 
 
             <!-- <div class="row d-flex justify-content-center align-items-center h-100">
@@ -103,7 +99,6 @@
         </div>
     </section>
 </body>
-<script src="assets/plugins/global/plugins.bundle.js"></script>
 <script>
 
     let typingTimer;
@@ -207,35 +202,13 @@
         });
 
     });
-
-    const target = document.getElementById('kt_clipboard_1');
-    const button = target.nextElementSibling;
-
-    // Init clipboard -- for more info, please read the offical documentation: https://clipboardjs.com/
-    var clipboard = new ClipboardJS(button, {
-        target: target,
-        text: function () {
-            return target.value;
+    const copyToClipboard = async () => {
+        try {
+            await navigator.clipboard.writeText(inputed.textContent);
+        } catch (error) {
+            console.error("Failed to copy to clipboard:", error);
         }
-    });
-
-    // Success action handler
-    clipboard.on('success', function (e) {
-        const currentLabel = button.innerHTML;
-
-        // Exit label update when already in progress
-        if (button.innerHTML === 'Copied!') {
-            return;
-        }
-
-        // Update button label
-        button.innerHTML = 'Copied!';
-
-        // Revert button label after 3 seconds
-        setTimeout(function () {
-            button.innerHTML = currentLabel;
-        }, 3000)
-    });
+    };
 </script>
 
 </html>
