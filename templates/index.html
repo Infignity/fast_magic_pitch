@@ -186,21 +186,21 @@
             const formData = new FormData();
             formData.append("prompt", replacedText);
 
-            // fetch('/ai_query', {
-            //     method: 'POST',
-            //     headers: {
-            //         "Content-Type": "application/json",
-            //     },
-            //     body: JSON.stringify({ "prompt": replacedText })
-            // })
-            //     .then(resp => resp.text())
-            //     .then(data => {
-            //         // document.getElementById("response").innerHTML = data;
-            //         location.reload(true)
-            //     })
-            //     .catch(error => {
-            //         console.error(error);
-            //     });
+            fetch('/ai_query', {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ "prompt": replacedText })
+            })
+                .then(resp => resp.text())
+                .then(data => {
+                    // document.getElementById("response").innerHTML = data;
+                    location.reload(true)
+                })
+                .catch(error => {
+                    console.error(error);
+                });
 
 
         });
