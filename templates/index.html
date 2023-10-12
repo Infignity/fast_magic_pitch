@@ -127,8 +127,8 @@
         console.log(text)
         const regex = /\$\{([^}]+)\}/g;
         const extractedVal = [...text.matchAll(regex)];
-        extractedValues = extractedVal.map(match => match[1]);
-
+        extractedValues = [... new Set(extractedVal.map(match => match[1]))];
+        
         dynamicInputs.innerHTML = '';
 
         // Create input fields for each extracted value
